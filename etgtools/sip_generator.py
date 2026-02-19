@@ -583,7 +583,12 @@ from .%s import *
         assert isinstance(memberVar, extractors.MemberVarDef)
         if memberVar.ignored:
             return
-        stream.write('%s%s %s' % (indent, memberVar.type, memberVar.name))
+
+        memberVarType = memberVar.type
+        if memberVarType.startswith('constexpr '):
+            memberVarType = 'const' + memberVarType[9:]
+            
+        stream.write('%s%s %s' % (indent, memberVarType, memberVar.name))
         stream.write(self.annotate(memberVar))
         if memberVar.getCode or memberVar.setCode:
             stream.write('\n%s{\n' % (indent,))
